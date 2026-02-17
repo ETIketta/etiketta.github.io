@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ETIchetta discoop</title>
+  <meta name="description" content="ETIchetta discoop — boutique reissue label (CD). Windows 95 vibes." />
+  <style>
+    /* ===== Windows 95-ish vibes (no external assets) ===== */
+    :root{
+      --bg: #008080;            /* classic teal desktop */
+      --win: #C0C0C0;           /* classic window gray */
+      --dark: #808080;
+      --darker: #404040;
+      --light: #FFFFFF;
+      --blue: #000080;          /* title bar blue */
+      --text: #000000;
+      --link: #0000EE;
+      --btn: #C0C0C0;
+      --hilite: #FFFFE1;
+      --mono: "MS Sans Serif", "Tahoma", "Verdana", sans-serif;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: var(--mono);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x:hidden;
+    }
+    /* Simple pixel-ish look */
+    *{box-sizing:border-box;}
+    a{color:var(--link); text-decoration:underline;}
+    a:hover{filter:brightness(1.1);}
+    .desktop{
+      min-height:100%;
+      padding:18px 14px 60px;
+      position:relative;
+    }
+
+    /* ===== Window chrome ===== */
+    .window{
+      width:min(920px, 96vw);
+      margin:0 auto;
+      background: var(--win);
+      border: 2px solid var(--dark);
+      border-top-color: var(--light);
+      border-left-color: var(--light);
+      box-shadow: 2px 2px 0 var(--darker);
+    }
+    .titlebar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:6px 6px;
+      background: linear-gradient(90deg, var(--blue), #2b2bb8);
+      color:#fff;
+      font-weight:bold;
+      font-size:14px;
+      user-select:none;
+    }
+    .titlebar .left{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .appicon{
+      width:16px;height:16px;
+      background:#fff;
+      border:1px solid #000;
+      display:grid;
+      place-items:center;
+      font-size:12px;
+      color:#000;
+      line-height:1;
+    }
+    .winbtns{
+      display:flex;
+      gap:4px;
+    }
+    .winbtn{
+      width:18px;height:18px;
+      background: var(--win);
+      border: 2px solid var(--dark);
+      border-top-color: var(--light);
+      border-left-color: var(--light);
+      display:grid;
+      place-items:center;
+      color:#000;
+      font-size:11px;
+      line-height:1;
+      cursor:default;
+    }
+    .menubar{
+      padding:6px 8px;
+      border-bottom:1px solid var(--dark);
+      background: var(--win);
+      font-size:13px;
+    }
+    .menubar span{
+      margin-right:16px;
+      cursor:default;
+    }
+    .content{
+      padding:12px;
+    }
+
+    /* ===== Layout inside window ===== */
+    .grid{
+      display:grid;
+      grid-template-columns: 240px 1fr;
+      gap:12px;
+    }
+    @media (max-width: 760px){
+      .grid{grid-template-columns:1fr;}
+    }
+
+    .panel{
+      background:#E9E9E9;
+      border: 2px solid var(--dark);
+      border-top-color: var(--light);
+      border-left-color: var(--light);
+      box-shadow: 1px 1px 0 var(--darker);
+      padding:10px;
+    }
+    .panel h2{
+      margin:0 0 8px;
+      font-size:14px;
+    }
+    .panel p, .panel li{
+      font-size:13px;
+      line-height:1.35;
+      margin:0 0 8px;
+    }
+    .hr95{
+      height:2px;
+      background: var(--dark);
+      border-bottom:1px solid var(--light);
+      margin:10px 0;
+    }
+
+    /* ===== Buttons ===== */
+    .btn{
+      display:inline-block;
+      padding:6px 10px;
+      background: var(--btn);
+      border: 2px solid var(--dark);
+      border-top-color: var(--light);
+      border-left-color: var(--light);
+      box-shadow: 1px 1px 0 var(--darker);
+      font-size:13px;
+      color:#000;
+      text-decoration:none;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:active{
+      border-top-color: var(--dark);
+      border-left-color: var(--dark);
+      border-bottom-color: var(--light);
+      border-right-color: var(--light);
+      box-shadow: 0 0 0 transparent;
+      transform: translate(1px,1px);
+    }
+
+    /* ===== Release list ===== */
+    .releases{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    .release{
+      background:#fff;
+      border: 2px solid var(--dark);
+      border-top-color: var(--light);
+      border-left-color: var(--light);
+      padding:10px;
+    }
+    .release .tag{
+      display:inline-block;
+      padding:2px 6px;
+      background: var(--hilite);
+      border:1px solid #000;
+      font-size:12px;
+      margin-right:6px;
+    }
+    .release h3{
+      margin:6px 0 6px;
+      font-size:14px;
+    }
+    .release .meta{
+      font-size:12px;
+      color:#222;
+      margin-bottom:8px;
+    }
+
+    /* ===== “Desktop” taskbar ===== */
+    .taskbar{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      height:44px;
+      background: var(--win);
+      border-top:2px solid var(--light);
+      box-shadow: 0 -1px 0 var(--dark);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+    }
+    .start{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      font-weight:bold;
+    }
+    .clock{
+      margin-left:auto;
+      padding:6px 10px;
+      border: 2px solid var(--dark);
+      border-top-color: var(--light);
+      border-left-color: var(--light);
+      font-size:12px;
+      min-width:74px;
+      text-align:center;
+      background:#E9E9E9;
+    }
+    .task{
+      padding:6px 10px;
+      border: 2px solid var(--dark);
+      border-top-color: var(--light);
+      border-left-color: var(--light);
+      background:#E9E9E9;
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:45vw;
+    }
+
+    /* ===== Tiny JS-free “tabs” using anchor targeting ===== */
+    .tabs{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .tab{
+      padding:6px 10px;
+      background: var(--btn);
+      border: 2px solid var(--dark);
+      border-top-color: var(--light);
+      border-left-color: var(--light);
+      box-shadow: 1px 1px 0 var(--darker);
+      font-size:13px;
+      text-decoration:none;
+      color:#000;
+    }
+    .tab:focus{outline:1px dotted #000; outline-offset:2px;}
+
+    section{display:none;}
+    section:target{display:block;}
+    /* Default section when no hash */
+    .default{display:block;}
+    :target ~ .default{display:none;}
+    /* Small helper so clicking logo goes “home” */
+    .homeLink{color:#fff; text-decoration:none;}
+  </style>
+</head>
+
+<body>
+  <div class="desktop">
+    <div class="window" role="application" aria-label="ETIchetta discoop">
+      <div class="titlebar">
+        <div class="left">
+          <div class="appicon" aria-hidden="true">◎</div>
+          <a class="homeLink" href="#">ETIchetta discoop — Audio Editions</a>
+        </div>
+        <div class="winbtns" aria-hidden="true">
+          <div class="winbtn">_</div>
+          <div class="winbtn">□</div>
+          <div class="winbtn">×</div>
+        </div>
+      </div>
+
+      <div class="menubar" aria-hidden="true">
+        <span>File</span><span>Edit</span><span>View</span><span>Tools</span><span>Help</span>
+      </div>
+
+      <div class="content">
+        <div class="tabs">
+          <a class="tab" href="#about">About</a>
+          <a class="tab" href="#releases">Releases</a>
+          <a class="tab" href="#licensing">Licensing</a>
+          <a class="tab" href="#contact">Contact</a>
+        </div>
+
+        <!-- Sections (hash targets) -->
+        <section id="about">
+          <div class="grid">
+            <div class="panel">
+              <h2>Label Mission</h2>
+              <p><b>ETIchetta discoop</b> is a boutique reissue label focused on overlooked gems:
+                Italian library music, French jazz-funk, krautrock, prog, and strange cinematic artifacts.</p>
+              <div class="hr95"></div>
+              <p><b>Format:</b> Pressed CD (replicated) — small, high-quality runs.</p>
+              <p><b>Approach:</b> licensing, archival research, clean artwork, liner notes.</p>
+              <p><b>Goal:</b> make rare music easy to own again.</p>
+              <div class="hr95"></div>
+              <a class="btn" href="#contact">Get in touch</a>
+            </div>
+
+            <div class="panel">
+              <h2>Windows 95 Vibes</h2>
+              <p>Because music archaeology deserves a desktop aesthetic.</p>
+              <div class="hr95"></div>
+              <ul>
+                <li>Small runs (300–1000)</li>
+                <li>Transparent sources & credits</li>
+                <li>Collector-friendly packaging</li>
+                <li>Global shipping</li>
+              </ul>
+              <div class="hr95"></div>
+              <p style="font-size:12px;">
+                Tip: replace placeholder text in <code>Releases</code> with your real catalog entries.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="releases">
+          <div class="panel">
+            <h2>Releases (placeholder)</h2>
+            <p>Drop your catalog here as you sign licenses. Keep it simple and collector-friendly.</p>
+            <div class="hr95"></div>
+
+            <div class="releases">
+              <div class="release">
+                <span class="tag">ETI-001</span>
+                <span class="tag">CD</span>
+                <span class="tag">LIMITED</span>
+                <h3>Artist — Album Title</h3>
+                <div class="meta">Year · Country · Genre · Remastered from archival source</div>
+                <p>Short description. 4-page booklet. Pressed CD. Notes, credits, and licensing details.</p>
+                <a class="btn" href="#contact">Request info / wholesale</a>
+              </div>
+
+              <div class="release">
+                <span class="tag">ETI-002</span>
+                <span class="tag">CD</span>
+                <h3>Various — Compilation Title</h3>
+                <div class="meta">1970s · Library / Jazz-Funk · Curated selection</div>
+                <p>Compilation concept: rare cuts, clear credits, proper publishing clearance.</p>
+                <a class="btn" href="#contact">Request info / wholesale</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="licensing">
+          <div class="panel">
+            <h2>Licensing & Rights</h2>
+            <p>We license recordings for physical reissue on replicated CD. We can work on:</p>
+            <ul>
+              <li>Royalty-based agreements (typically % of wholesale on units sold)</li>
+              <li>Limited pressings (e.g., 500–1500 units) with renewal options</li>
+              <li>Proper composer/publisher declarations via collecting societies</li>
+            </ul>
+            <div class="hr95"></div>
+            <p style="font-size:13px;">
+              If you control a catalog (label, artist, estate, publisher) and want a high-quality reissue,
+              contact us with: title, year, ownership confirmation, and available sources (digital masters, tapes, etc.).
+            </p>
+            <div class="hr95"></div>
+            <a class="btn" href="#contact">Contact for licensing</a>
+          </div>
+        </section>
+
+        <section id="contact">
+          <div class="panel">
+            <h2>Contact</h2>
+            <p>For licensing, distribution, or press:</p>
+            <div class="hr95"></div>
+            <p>
+              <b>Email:</b> <a href="mailto:info@eticchettadiscoop.com">info@eticchettadiscoop.com</a><br/>
+              <b>Bandcamp:</b> <a href="#" onclick="alert('Replace this link with your Bandcamp URL.'); return false;">eticchettadiscoop.bandcamp.com</a><br/>
+              <b>Instagram:</b> <a href="#" onclick="alert('Replace this link with your Instagram URL.'); return false;">@eticchettadiscoop</a>
+            </p>
+            <div class="hr95"></div>
+            <p style="font-size:12px;">
+              Replace the email/domain with your real one. (Tip: buy a domain + set up forwarding to Gmail.)
+            </p>
+          </div>
+        </section>
+
+        <!-- Default content when no hash is set -->
+        <div class="default">
+          <div class="panel">
+            <h2>Welcome</h2>
+            <p><b>ETIchetta discoop</b> — boutique reissues with a desktop-era glow.</p>
+            <div class="hr95"></div>
+            <p>
+              Start here:
+              <a href="#about">About</a> ·
+              <a href="#releases">Releases</a> ·
+              <a href="#licensing">Licensing</a> ·
+              <a href="#contact">Contact</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="taskbar" role="contentinfo" aria-label="Taskbar">
+    <div class="btn start" onclick="alert('Start menu is a vibe, not a feature.');">Start</div>
+    <div class="task">ETIchetta discoop — Audio Editions</div>
+    <div class="clock" id="clock">00:00</div>
+  </div>
+
+  <script>
+    // Tiny clock for the taskbar
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function tick(){
+      const d = new Date();
+      document.getElementById('clock').textContent = pad(d.getHours()) + ":" + pad(d.getMinutes());
+    }
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
