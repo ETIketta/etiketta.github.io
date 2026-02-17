@@ -1,17 +1,18 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ETIketta D.C. — etiketta discografica cooperativa</title>
-  <meta name="description" content="ETIketta D.C. — etiketta discografica cooperativa. Boutique reissues su CD (replicati). Vibes: Windows 3.1 / DOS shareware." />
+  <meta name="description" content="ETIketta D.C. — etiketta discografica cooperativa. Boutique reissue label (pressed CD). Ultra-vintage technical-document vibes." />
 
   <style>
-    /* ====== Ultra-vintage look: Windows 3.1 / DOS shareware ====== */
+    /* ===== Ultra-vintage look: Windows 3.1 / DOS shareware + technical manual vibe ===== */
     :root{
       --desk1:#7a7a7a;
       --desk2:#8a8a8a;
-      --paper:#f6f1d6;      /* old monitor beige */
+      --paper:#f6f1d6;      /* old beige paper/monitor */
+      --paper2:#efe8c4;
       --ink:#111;
       --ui:#c9c3a6;         /* beige UI */
       --ui2:#b8b297;
@@ -27,17 +28,67 @@
     body{
       margin:0;
       color:var(--ink);
-      background:
-        /* dithered desktop pattern */
-        repeating-linear-gradient(45deg, rgba(0,0,0,.12) 0 1px, transparent 1px 3px),
-        repeating-linear-gradient(-45deg, rgba(255,255,255,.10) 0 1px, transparent 1px 3px),
-        linear-gradient(180deg, var(--desk2), var(--desk1));
       font-family: var(--sans);
       overflow-x:hidden;
+
+      /* Desktop base */
+      background:
+        /* coarse dither desktop pattern */
+        repeating-linear-gradient(45deg, rgba(0,0,0,.10) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,.08) 0 1px, transparent 1px 3px),
+        linear-gradient(180deg, var(--desk2), var(--desk1));
+    }
+
+    /* === “Technical manual” background overlay (ORIGINAL, not from the PDF) ===
+       This is an inline SVG pattern: faint grid + tiny headings + pseudo “codes”.
+    */
+    .wrap{
+      padding:18px 12px 64px;
+      position:relative;
+    }
+    .wrap::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.22;
+      mix-blend-mode:overlay;
+      background-image:
+        url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 520 520'>\
+  <defs>\
+    <pattern id='grid' width='26' height='26' patternUnits='userSpaceOnUse'>\
+      <path d='M26 0H0V26' fill='none' stroke='%23000000' stroke-opacity='0.10' stroke-width='1'/>\
+      <path d='M13 0V26M0 13H26' fill='none' stroke='%23000000' stroke-opacity='0.06' stroke-width='1'/>\
+    </pattern>\
+  </defs>\
+  <rect width='520' height='520' fill='url(%23grid)'/>\
+  <g font-family='Courier New, monospace' font-size='10' fill='%23000000' fill-opacity='0.13'>\
+    <text x='18' y='26'>ETIketta D.C. / ARCHIVE AUDIO EDITIONS</text>\
+    <text x='18' y='42'>SERVICE NOTES — DIGITAL TRANSFER / REISSUE PROGRAM</text>\
+    <text x='18' y='70'>00 01 10 11 01 00 10 10 01 01 00 11 10 00 01 11</text>\
+    <text x='18' y='86'>SYNC: ____   RATE: ____   WORD: ____   CH: 2   REF: A=440</text>\
+    <text x='18' y='112'>CHECKLIST: azimuth / bias / EQ / headroom / dropout log</text>\
+  </g>\
+  <g stroke='%23000000' stroke-opacity='0.08' fill='none'>\
+    <path d='M50 190h420'/>\
+    <path d='M50 210h420'/>\
+    <path d='M50 230h420'/>\
+    <path d='M50 250h420'/>\
+    <path d='M50 270h420'/>\
+    <path d='M50 290h420'/>\
+    <path d='M50 310h420'/>\
+  </g>\
+  <g font-family='Courier New, monospace' font-size='9' fill='%23000000' fill-opacity='0.10'>\
+    <text x='54' y='186'>LEVEL (dBFS)</text>\
+    <text x='54' y='330'>TIME</text>\
+  </g>\
+</svg>");
+      background-repeat:repeat;
+      background-size:520px 520px;
     }
 
     /* Window */
-    .wrap{ padding:18px 12px 64px; }
     .window{
       width:min(960px, 96vw);
       margin:0 auto;
@@ -46,6 +97,8 @@
       border-top-color: var(--hi);
       border-left-color: var(--hi);
       box-shadow: 4px 4px 0 var(--shadow);
+      position:relative;
+      z-index:1;
     }
     .titlebar{
       background: linear-gradient(90deg, var(--blue), #0000aa);
@@ -59,12 +112,7 @@
       font-weight:bold;
       font-size:13px;
     }
-    .title-left{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      min-width:0;
-    }
+    .title-left{display:flex; align-items:center; gap:8px; min-width:0;}
     .icon{
       width:18px;height:18px;
       border:1px solid #000;
@@ -76,11 +124,7 @@
       font-size:12px;
       line-height:1;
     }
-    .title{
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .title{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
     .winbtns{ display:flex; gap:4px; }
     .winbtn{
       width:18px;height:18px;
@@ -106,13 +150,16 @@
     .menubar span{ margin-right:18px; }
 
     .content{
-      background:var(--paper);
+      /* paper surface inside window */
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.30), rgba(0,0,0,.03)),
+        repeating-linear-gradient(0deg, rgba(0,0,0,.035) 0 1px, transparent 1px 24px),
+        linear-gradient(0deg, var(--paper), var(--paper2));
       border-top:1px solid var(--hi);
       padding:14px 12px 16px;
       font-family: var(--mono);
     }
 
-    /* Old-school separators */
     .rule{
       height:2px;
       background:var(--lo);
@@ -120,7 +167,6 @@
       margin:10px 0;
     }
 
-    /* Layout */
     .grid{
       display:grid;
       grid-template-columns: 280px 1fr;
@@ -129,7 +175,7 @@
     @media (max-width:820px){ .grid{grid-template-columns:1fr;} }
 
     .panel{
-      background:rgba(255,255,255,.35);
+      background:rgba(255,255,255,.30);
       border: 2px solid var(--lo);
       border-top-color: var(--hi);
       border-left-color: var(--hi);
@@ -146,7 +192,6 @@
     a{ color:#0000ee; text-decoration:underline; }
     a:hover{ filter:brightness(1.1); }
 
-    /* Tabs: very old-school */
     .tabs{
       display:flex;
       flex-wrap:wrap;
@@ -174,15 +219,13 @@
       box-shadow:none;
     }
 
-    /* Sections */
     section{ display:none; }
     section:target{ display:block; }
     .default{ display:block; }
     :target ~ .default{ display:none; }
 
-    /* Release entries */
     .release{
-      background:rgba(255,255,255,.55);
+      background:rgba(255,255,255,.45);
       border: 2px solid var(--lo);
       border-top-color: var(--hi);
       border-left-color: var(--hi);
@@ -200,7 +243,6 @@
     }
     .meta{ font-size:11px; opacity:.9; margin-bottom:6px; }
 
-    /* Button */
     .btn{
       display:inline-block;
       padding:6px 10px;
@@ -223,7 +265,6 @@
       box-shadow:none;
     }
 
-    /* Footer taskbar - even older: simple status bar */
     .statusbar{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -237,6 +278,7 @@
       gap:10px;
       font-family: var(--sans);
       font-size:12px;
+      z-index:2;
     }
     .status{
       background:var(--paper);
@@ -263,7 +305,6 @@
       font-family: var(--mono);
     }
 
-    /* Tiny ASCII accent */
     .ascii{
       font-family: var(--mono);
       font-size:11px;
@@ -291,15 +332,15 @@
       </div>
 
       <div class="menubar" aria-hidden="true">
-        <span>File</span><span>Catalogo</span><span>Strumenti</span><span>Aiuto</span>
+        <span>File</span><span>Catalog</span><span>Tools</span><span>Help</span>
       </div>
 
       <div class="content">
         <div class="tabs">
           <a class="tab" href="#home">Home</a>
-          <a class="tab" href="#releases">Uscite</a>
-          <a class="tab" href="#licensing">Licenze</a>
-          <a class="tab" href="#contact">Contatto</a>
+          <a class="tab" href="#releases">Releases</a>
+          <a class="tab" href="#licensing">Licensing</a>
+          <a class="tab" href="#contact">Contact</a>
         </div>
 
         <section id="home">
@@ -309,16 +350,16 @@
               <p><b>etiketta discografica cooperativa</b></p>
               <div class="rule"></div>
               <p>
-                Reissue boutique di dischi dimenticati: library italiana anni ’70, jazz-funk francese,
-                krautrock, prog, colonne sonore e stranezze d’archivio.
+                Boutique reissues of overlooked records: 70s Italian library music, French jazz-funk,
+                krautrock, prog, soundtrack oddities, and archival artifacts.
               </p>
-              <p><b>Formato iniziale:</b> CD replicati (pressati), tirature piccole e curate.</p>
+              <p><b>Initial format:</b> replicated (pressed) CD — small, careful runs.</p>
               <div class="rule"></div>
-              <a class="btn" href="#contact">Scrivici</a>
+              <a class="btn" href="#contact">Write to us</a>
 
               <div class="ascii" aria-hidden="true">
 +----------------------------------+
-|  ETIketta D.C.  (c)              |
+|  ETIketta D.C.                   |
 |  archival audio editions         |
 |  [pressed CD] [limited runs]     |
 +----------------------------------+
@@ -326,16 +367,16 @@
             </div>
 
             <div class="panel">
-              <h2>Come lavoriamo</h2>
+              <h2>How we work</h2>
               <ul>
-                <li>Licenze ufficiali con titolari dei diritti</li>
-                <li>Ricerca d’archivio + crediti chiari</li>
-                <li>Artwork sobrio, note, booklet</li>
-                <li>Distribuzione: online + negozi selezionati</li>
+                <li>Official licensing with rights holders</li>
+                <li>Archival research + clear credits</li>
+                <li>Minimal, collector-friendly design + liner notes</li>
+                <li>Distribution: online + selected shops</li>
               </ul>
               <div class="rule"></div>
               <p style="font-size:11px;">
-                Nota: non gestiamo impianti di pressaggio — la replicazione CD viene affidata a plant certificati.
+                We do not operate a pressing plant — CD replication is handled by certified manufacturers.
               </p>
             </div>
           </div>
@@ -343,62 +384,61 @@
 
         <section id="releases">
           <div class="panel">
-            <h2>Uscite (placeholder)</h2>
-            <p>Qui inserirai le prime uscite quando firmi le licenze.</p>
+            <h2>Releases (placeholder)</h2>
+            <p>Add your catalog here once licenses are signed.</p>
             <div class="rule"></div>
 
             <div class="release">
               <span class="tag">ETI-001</span><span class="tag">CD</span><span class="tag">LIMITED</span>
-              <h3>Artista — Titolo Album</h3>
-              <div class="meta">Anno · Paese · Genere · Fonte archivio</div>
-              <p>Descrizione breve. Booklet, crediti completi, edizione replicata su CD.</p>
-              <a class="btn" href="#contact">Info / distribuzione</a>
+              <h3>Artist — Album Title</h3>
+              <div class="meta">Year · Country · Genre · Archival source</div>
+              <p>Short description. Pressed CD. Booklet. Full credits and licensing details.</p>
+              <a class="btn" href="#contact">Wholesale / info</a>
             </div>
 
             <div class="release">
               <span class="tag">ETI-002</span><span class="tag">CD</span>
-              <h3>Various — Compilation Titolo</h3>
-              <div class="meta">1970s · Library / Jazz-Funk · Curatela</div>
-              <p>Compilazione tematica: tracce rare, note, crediti e clearance editoriale.</p>
-              <a class="btn" href="#contact">Info / distribuzione</a>
+              <h3>Various — Compilation Title</h3>
+              <div class="meta">1970s · Library / Jazz-Funk · Curated selection</div>
+              <p>A thematic compilation with proper clearance, notes, and track-by-track credits.</p>
+              <a class="btn" href="#contact">Wholesale / info</a>
             </div>
           </div>
         </section>
 
         <section id="licensing">
           <div class="panel">
-            <h2>Licenze / Diritti</h2>
+            <h2>Licensing</h2>
             <p>
-              ETIketta D.C. lavora con licenze ufficiali per ristampe fisiche su CD replicati.
-              Possiamo valutare accordi basati su royalty (% sul wholesale, su unità vendute).
+              ETIketta D.C. works with official licenses for physical reissues on replicated CD.
+              We are open to royalty-based agreements (typically a % of wholesale on units sold).
             </p>
             <div class="rule"></div>
-            <p><b>Se controlli un catalogo</b> (label, artista, eredi, editore) e vuoi una ristampa curata, includi:</p>
+            <p><b>If you control a catalog</b> (label, artist, estate, publisher), please include:</p>
             <ul>
-              <li>Titolo, anno, etichetta originale</li>
-              <li>Conferma proprietà del master (recording rights)</li>
-              <li>Disponibilità sorgenti (hi-res files / tape transfer / ecc.)</li>
-              <li>Territori e quantità desiderate</li>
+              <li>Title, year, original label</li>
+              <li>Confirmation of master ownership (recording rights)</li>
+              <li>Available sources (hi-res files / archive transfers / tape transfer options)</li>
+              <li>Territory and preferred quantities</li>
             </ul>
             <div class="rule"></div>
-            <a class="btn" href="#contact">Contatto licenze</a>
+            <a class="btn" href="#contact">Licensing contact</a>
           </div>
         </section>
 
         <section id="contact">
           <div class="panel">
-            <h2>Contatto</h2>
-            <p>Licenze · Distribuzione · Stampa</p>
+            <h2>Contact</h2>
+            <p>Licensing · Distribution · Press</p>
             <div class="rule"></div>
             <p>
               <b>Email:</b> <a href="mailto:info@etiketta.github.io">info@etiketta.github.io</a><br/>
-              <b>Bandcamp:</b> <a href="#" onclick="alert('Sostituisci con il tuo link Bandcamp.'); return false;">etiketta.bandcamp.com</a><br/>
-              <b>Instagram:</b> <a href="#" onclick="alert('Sostituisci con il tuo link Instagram.'); return false;">@etiketta_dc</a>
+              <b>Bandcamp:</b> <a href="#" onclick="alert('Replace with your Bandcamp URL.'); return false;">etiketta.bandcamp.com</a><br/>
+              <b>Instagram:</b> <a href="#" onclick="alert('Replace with your Instagram URL.'); return false;">@etiketta_dc</a>
             </p>
             <div class="rule"></div>
             <p style="font-size:11px;">
-              Suggerimento: quando sei pronto, compra un dominio (.com) e crea una mail tipo
-              <b>info@etiketta-dc.com</b> (molto più credibile per licensing).
+              Tip: later, buy a domain and use an email like <b>info@etiketta-dc.com</b> for licensing credibility.
             </p>
           </div>
         </section>
@@ -406,7 +446,7 @@
         <div class="default">
           <div class="panel">
             <h2>ETIketta D.C.</h2>
-            <p>Seleziona una voce: <a href="#home">Home</a> · <a href="#releases">Uscite</a> · <a href="#licensing">Licenze</a> · <a href="#contact">Contatto</a></p>
+            <p>Select: <a href="#home">Home</a> · <a href="#releases">Releases</a> · <a href="#licensing">Licensing</a> · <a href="#contact">Contact</a></p>
           </div>
         </div>
 
